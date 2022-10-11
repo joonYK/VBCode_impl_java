@@ -1,5 +1,6 @@
 package jy.study.vbcode;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 
 public class VariableByteCode {
@@ -9,18 +10,30 @@ public class VariableByteCode {
         byte[] bytes = new byte[size];
 
         int i = size - 1;
-        do {
+        while (true) {
             bytes[i] = (byte) (n % 128);
+            if (n < 128)
+                break;
             n = n / 128;
             i--;
-        } while (n >= 128);
+        }
 
         bytes[size - 1] += 128;
         return bytes;
     }
 
     public static byte[] encode(List<Integer> numbers) {
-        return null;
+        ByteBuffer byteBuffer = ByteBuffer.allocate(Integer.BYTES * numbers.size());
+        for (Integer number : numbers) {
+            byte[] encodedBytes = encodeNumber(number);
+            byteBuffer.put(encodedBytes);
+        }
+
+        byte[] byteStream = new byte[byteBuffer.position()];
+        byteBuffer.flip();
+        byteBuffer.get(byteStream);
+
+        return byteStream;
     }
 
     public static List<Integer> decode(byte[] byteStream) {
