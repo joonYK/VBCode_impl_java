@@ -35,4 +35,20 @@ class VariableByteCodeTest {
         assertEquals("1", Integer.toBinaryString(bytes[1] & 0xff));
         assertEquals("10000010", Integer.toBinaryString(bytes[2] & 0xff));
     }
+
+    @Test
+    void decode() {
+        //given
+        byte[] bytes = {(byte) Integer.parseInt("10000101", 2),
+                        (byte) Integer.parseInt("00000001", 2),
+                        (byte) Integer.parseInt("10000010", 2)};
+
+        //when
+        List<Integer> numbers = VariableByteCode.decode(bytes);
+
+        //then
+        assertEquals(2, numbers.size());
+        assertEquals(5, numbers.get(0));
+        assertEquals(130, numbers.get(1));
+    }
 }

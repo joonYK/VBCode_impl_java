@@ -1,6 +1,7 @@
 package jy.study.vbcode;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VariableByteCode {
@@ -37,6 +38,20 @@ public class VariableByteCode {
     }
 
     public static List<Integer> decode(byte[] byteStream) {
-        return null;
+        List<Integer> numbers = new ArrayList<>();
+        int n = 0;
+
+        for (int i = 0; i < byteStream.length; i++) {
+            int b = byteStream[i] & 0xff;
+            if (b < 128) {
+                n = 128 * n + b;
+            } else {
+                n = 128 * n + (b - 128);
+                numbers.add(n);
+                n = 0;
+            }
+        }
+
+        return numbers;
     }
 }
